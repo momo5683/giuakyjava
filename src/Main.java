@@ -6,6 +6,6 @@ public class Main{
 
     public static void main(String[] args) {
         StaffsModel model = new StaffsModelImpl();
-        ViewStaff viewStaff = new ViewStaff(model);
+        ViewStaff viewStaffs = new ViewStaff(model);
     }
 }
