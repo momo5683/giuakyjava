@@ -28,13 +28,13 @@ public class StaffTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
 
-        Staff student = staffList.get(rowIndex);
+        Staff staff = staffList.get(rowIndex);
         if(columnIndex == ID){
-            return student.getId();
+            return staff.getId();
         }else if(columnIndex == FULL_NAME){
-            return student.getFullName();
+            return staff.getFullName();
         }else if(columnIndex == GENDER){
-            return student.getGender();
+            return staff.getGender();
         }else {
             return null;
         }
@@ -45,7 +45,7 @@ public class StaffTableModel extends AbstractTableModel {
         return columnNames[column];
     }
 
-    public void updateStudents(List<Staff> staff){
+    public void updateStaffs(List<Staff> staff){
         this.staffList.clear();
         this.staffList.addAll(staff);
         fireTableDataChanged();

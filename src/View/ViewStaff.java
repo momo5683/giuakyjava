@@ -12,16 +12,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Vector;
 
 public class ViewStaff extends JFrame implements TableObserver {
 
     private JPanel rootPanel;
-    private JTable studentTable;
+    private JTable staffTable;
     private JButton addButton;
     private JButton deleteButton;
-    private JButton updateButton;
 
     private StaffTableModel staffTableModel;
     private StaffsModel staffsModel;
@@ -45,7 +46,7 @@ public class ViewStaff extends JFrame implements TableObserver {
         setVisible(true);
 
         staffTableModel = new StaffTableModel();
-        studentTable.setModel(staffTableModel);
+        staffTable.setModel(staffTableModel);
 
         addButton.addActionListener(new ActionListener() {
             @Override
@@ -62,16 +63,15 @@ public class ViewStaff extends JFrame implements TableObserver {
             }
         });
 
-        updateButton.addActionListener(new ActionListener() {
+        List<Staff> staff = this.staffsModel.getAllStaff();
+        staffTableModel.updateStaffs(staff);
+
+        staffTable.addMouseListener(new MouseAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                onUpdateStaff(e);
+            public void mouseClicked(MouseEvent e) {
+                onEmployeesTableClicked(e);
             }
         });
-
-        List<Staff> staff = this.staffsModel.getAllStaff();
-        staffTableModel.updateStudents(staff);
-
     }
 
     private void onAddStaff(ActionEvent e){
@@ -80,21 +80,21 @@ public class ViewStaff extends JFrame implements TableObserver {
     }
 
     private void onDeleteStaff(ActionEvent e){
-        if (studentTable.getSelectedRow() != -1) {
+        if (staffTable.getSelectedRow() != -1) {
             StaffsController staffController = new StaffsControllerImpl(this, staffsModel, new NewStaff());
-            staffController.deleteStaff((Integer) staffTableModel.getValueAt(studentTable.getSelectedRow(), 0));
-            System.out.println(studentTable.getSelectedRow());
+            staffController.deleteStaff((Integer) staffTableModel.getValueAt(staffTable.getSelectedRow(), 0));
+            System.out.println(staffTable.getSelectedRow());
         }else {
             JOptionPane.showConfirmDialog(null, "Chưa chọn bất kỳ nhân viên nào", "Xóa nhân viên", JOptionPane.OK_OPTION);
         }
     }
 
-    private void onUpdateStaff(ActionEvent e){
-        if (studentTable.getSelectedRow() != -1) {
-            StaffsController staffController = new StaffsControllerImpl(this, staffsModel, new NewStaff());
-            staffController.updateStaff((Integer) staffTableModel.getValueAt(studentTable.getSelectedRow(), 0));
-        }else {
-            JOptionPane.showConfirmDialog(null, "Chưa chọn bất kỳ nhân viên nào", "Xóa nhân viên", JOptionPane.OK_OPTION);
+    private void onEmployeesTableClicked(MouseEvent e) {
+        if (e.getClickCount() > 1) {
+            if (staffTable.getSelectedRow() != -1) {
+                StaffsController staffController = new StaffsControllerImpl(this, staffsModel, new NewStaff());
+                staffController.updateStaff((Integer) staffTableModel.getValueAt(staffTable.getSelectedRow(), 0));
+            }
         }
     }
 
@@ -103,8 +103,8 @@ public class ViewStaff extends JFrame implements TableObserver {
     }
 
     @Override
-    public void updateTable(List<Staff> students) {
-        staffTableModel.updateStudents(students);
+    public void updateTable(List<Staff> staffs) {
+        staffTableModel.updateStaffs(staffs);
     }
 
 }
